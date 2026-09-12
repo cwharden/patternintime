@@ -91,8 +91,11 @@ if 'last_result' not in st.session_state:
     st.session_state.last_result = None
 if 'pattern_input' not in st.session_state:
     st.session_state.pattern_input = ""
+if 'unlimited' not in st.session_state:
+    st.session_state.unlimited = False
 
 FREE_LIMIT = 2
+UNLOCK_CODE = "PLARN2026"  # ← Change this to your own secret code
 
 # ---------- Header ----------
 st.title("🧶 PatternInTime")
@@ -131,7 +134,9 @@ input_text = st.text_area(
 
 # ---------- Usage Indicator ----------
 remaining = FREE_LIMIT - st.session_state.translations_used
-if remaining > 0:
+if st.session_state.unlimited:
+    st.caption("✨ **Unlimited access** — thank you for your support!")
+elif remaining > 0:
     st.caption(f"✨ You have **{remaining}** free translation{'s' if remaining != 1 else ''} remaining.")
 else:
     st.caption("🔒 Free limit reached. Unlock unlimited access below.")
@@ -141,7 +146,7 @@ translate_clicked = st.button(
     "🔄 Translate",
     type="primary",
     use_container_width=True,
-    disabled=(remaining <= 0)
+    disabled=(not st.session_state.unlimited and remaining <= 0)
 )
 
 if translate_clicked:
@@ -186,7 +191,7 @@ if st.session_state.last_result:
                 st.write(f"- **{orig}** → **{repl}**  ({cnt}×)")
 
 # ---------- Upgrade Prompt ----------
-if remaining <= 0:
+if not st.session_state.unlimited and remaining <= 0:
     st.markdown("---")
     st.subheader("🚀 Unlock Unlimited Translations")
     st.markdown("""
@@ -205,7 +210,25 @@ if remaining <= 0:
         type="primary",
         use_container_width=True
     )
-    st.caption("_After purchase, contact me for your access code._")
+
+    st.markdown("---")
+    st.markdown("**Already purchased? Enter your unlock code:**")
+    col_code, col_btn = st.columns([3, 1])
+    with col_code:
+        code_input = st.text_input(
+            "Unlock code",
+            key="unlock_code_input",
+            label_visibility="collapsed",
+            placeholder="Enter your unlock code"
+        )
+    with col_btn:
+        if st.button("Unlock", use_container_width=True):
+            if code_input.strip().upper() == UNLOCK_CODE:
+                st.session_state.unlimited = True
+                st.success("🎉 Unlimited access unlocked! Enjoy!")
+                st.rerun()
+            else:
+                st.error("Invalid code.")
 
 # ---------- Hook Size Reference ----------
 st.markdown("---")
@@ -230,11 +253,11 @@ with st.expander("📏 Hook Size Conversion Chart (US ↔ UK ↔ Metric)"):
 *Hook sizing can vary by manufacturer. When in doubt, use the metric (mm) measurement.*
 """)
 
-# ---------- Developer Options (remove before public launch) ----------
 with st.expander("🔧 Developer Options — remove before public launch"):
     if st.button("Reset translation counter"):
         st.session_state.translations_used = 0
-        st.success("Counter reset.")
+        st.session_state.unlimited = False
+        st.success("Counter and unlock reset.")
 
 # ---------- Footer ----------
 st.markdown("---")

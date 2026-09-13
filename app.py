@@ -204,9 +204,9 @@ if not st.session_state.unlimited and remaining <= 0:
 
     **$5 one-time** — no subscription, no expiration.
     """)
-    st.link_button(
+        st.link_button(
         "💳 Get Unlimited Access — $5",
-        "https://www.etsy.com/shop/PlarnThings",
+        "https://plarnthings.etsy.com/listing/4574250200",
         type="primary",
         use_container_width=True
     )

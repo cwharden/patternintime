@@ -97,6 +97,16 @@ if 'unlimited' not in st.session_state:
 FREE_LIMIT = 2
 UNLOCK_CODE = "PLARN2026"  # ← Change this to your own secret code
 
+# ---------- URL-based unlock (for bookmarked links) ----------
+try:
+    url_code = st.query_params.get("code", "")
+    if isinstance(url_code, list):
+        url_code = url_code[0] if url_code else ""
+    if url_code and url_code.strip().upper() == UNLOCK_CODE:
+        st.session_state.unlimited = True
+except Exception:
+    pass  # Older Streamlit versions – skip silently
+
 # ---------- Header ----------
 st.title("🧶 PatternInTime")
 st.markdown("**Convert crochet patterns between US and UK terminology — instantly.**")

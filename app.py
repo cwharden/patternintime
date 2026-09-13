@@ -263,6 +263,6 @@ with st.expander("🔧 Developer Options — remove before public launch"):
 st.markdown("---")
 st.markdown(
     "**PatternInTime** — built by a crocheter, for crocheters. 🧶  "
-    "Questions or feedback? [Contact me](mailto:patternintime@gmail.com)."
+    "Questions or feedback? [Contact me](mailto:cwhstier@gmail.com)."
 )
 st.caption("Made in Memphis, Tennessee · Powered by Streamlit")

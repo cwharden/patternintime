@@ -235,7 +235,11 @@ if not st.session_state.unlimited and remaining <= 0:
         if st.button("Unlock", use_container_width=True):
             if code_input.strip().upper() == UNLOCK_CODE:
                 st.session_state.unlimited = True
-                st.success("🎉 Unlimited access unlocked! Enjoy!")
+                try:
+                    st.query_params["code"] = UNLOCK_CODE
+                except Exception:
+                    pass
+                st.success("🎉 Unlimited access unlocked! Bookmark this page to stay unlocked.")
                 st.rerun()
             else:
                 st.error("Invalid code.")

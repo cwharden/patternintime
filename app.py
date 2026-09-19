@@ -390,7 +390,6 @@ with tab_stash:
         # Export / Import
         st.markdown("---")
         col_ex, col_im, col_cl = st.columns(3)
-
         with col_ex:
             output = StringIO()
             writer = csv.DictWriter(
@@ -398,7 +397,10 @@ with tab_stash:
                 fieldnames=['material', 'brand', 'color', 'weight', 'qty', 'unit', 'scrap', 'notes']
             )
             writer.writeheader()
-            writer.writerows(st.session_state.yarn_stash)
+            for s in st.session_state.yarn_stash:
+                row = dict(s)
+                row['scrap'] = 'Yes' if s['scrap'] else 'No'
+                writer.writerow(row)        
             st.download_button(
                 label="📥 Export Stash CSV",
                 data=output.getvalue().encode('utf-8'),

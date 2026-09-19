@@ -429,7 +429,7 @@ with tab_stash:
                             'weight': row.get('weight', '') or '—',
                             'qty': float(row.get('qty', 0) or 0),
                             'unit': row.get('unit', 'yards'),
-                            'scrap': str(row.get('scrap', '')).lower() == 'true',
+                            'scrap': str(row.get('scrap', '')).strip().lower() in ('yes', 'true', '1'),
                             'notes': row.get('notes', '')
                         })
                     st.session_state.yarn_stash = imported
